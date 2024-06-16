@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>퍼스널 컬러 테스트</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .container {
+            width: 40%;
+            margin: 0 auto;
+        }
+        .question, .result {
+            display: none;
+        }
+        .result img {
+            max-width: 80%;
+            height: auto;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>퍼스널 컬러 테스트</h1>
+        
+        <div id="questions" class="question">
+            <div>
+                <label>1. 눈의 색 유형을 입력하세요:</label>
+                <input type="text" id="eyeColor">
+            </div>
+            <div>
+                <label>2. 머리카락의 색 유형을 입력하세요:</label>
+                <input type="text" id="hairColor">
+            </div>
+            <div>
+                <label>3. 피부의 색 유형을 입력하세요:</label>
+                <input type="text" id="skinColor">
+            </div>
+            <div>
+                <label> 4. 평소에 잘 어울린 립스틱 색은?</label>
+                <img src="립 컬러.jpg" alt="립 컬러" width="300">
+                <label><br>A 피치핑크 B로즈핑크 C살몬핑크 D마젠타:</label>
+                <input type="text" id="question4">
+            </div>
+            <div>
+                <label>5. 주변에게 많이 듣는 이미지는?
+                    <br>A 어려 보이고 친밀한 느낌
+                    <br>B 부드러우면서 여성스러운 느낌
+                    <br>C 성숙하고 차분한 느낌
+                    <br>D 도시적이며 샤프한 느낌
+                    <br>:</label>
+                <input type="text" id="question5">
+            </div>
+            <button onclick="calculateResult()">결과 확인하기</button>
+        </div>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const Test = ['A', 'B', 'C', 'D'];
+        const weights = [2.2, 2.6, 3, 1.1, 1];
+
+        document.getElementById('questions').style.display = 'block';
+
+        function calculateResult() {
+            const Result = [
+                document.getElementById('eyeColor').value,
+                document.getElementById('hairColor').value,
+                document.getElementById('skinColor').value,
+                document.getElementById('question4').value,
+                document.getElementById('question5').value
+            ];
+
+            let counter = {};
+            Test.forEach(char => counter[char] = 0);
+            Result.forEach(char => {
+                if (char in counter) {
+                    counter[char] += 1;
+                }
+            });
+
+            let maxCount = Math.max(...Object.values(counter));
+            let maxChars = Object.keys(counter).filter(char => counter[char] === maxCount);
+
+            let maxChar;
+            if (maxChars.length > 1) {
+                let weightedCount = {};
+                Test.forEach(char => weightedCount[char] = 0);
+                Result.forEach((char, i) => {
+                    if (char in weightedCount) {
+                        weightedCount[char] += weights[i];
+                    }
+                });
+                maxChar = Object.keys(weightedCount).reduce((a, b) => weightedCount[a] > weightedCount[b] ? a : b);
+            } else {
+                maxChar = maxChars[0];
+            }
+
+            showResult(maxChar);
+        }
+
+        function showResult(maxChar) {
+            const resultDiv = document.getElementById('result');
+            let resultMessage = '';
+
+            switch (maxChar) {
+                case 'A':
+                    resultMessage = `<p>당신은 봄 유형입니다.</p>
+                            <p>봄(Spring) 계절은 화사하고 밝은 피부톤을 가진 사람들에게 잘 어울리며, 따뜻한 베이스의 색상이 잘 어울립니다. 주로 연한 베이지, 황색 계열의 옷을 선택하여 매력을 더할 수 있습니다. 봄 퍼스널 컬러는 자연과 신선함을 상징하며, 활기찬 느낌을 주는 색상들이 주를 이룹니다.</p>
+                            <img src="봄 웜.jpg" alt="봄">`;
+                    break;
+                case 'B':
+                    resultMessage = `<p>당신은 여름 유형입니다.</p>
+                            <p>여름(Summer) 계절은 차분하고 시원한 피부톤을 가진 사람들에게 어울리는 색상을 선호합니다. 주로 연한 로즈, 시원한 블루 계열의 색상이 잘 어울리며, 부드럽고 고운 느낌을 연출할 수 있습니다. 여름 퍼스널 컬러는 자연적인 아름다움을 강조하며, 부드러운 톤의 색감을 중시합니다.</p>
+                            <img src="여름쿨.jpg" alt="여름">`;
+                    break;
+                case 'C':
+                    resultMessage = `<p>당신은 가을 유형입니다.</p>
+                            <p>가을(Autumn) 계절은 따뜻하고 짙은 피부톤을 가진 사람들에게 잘 어울리며, 따뜻한 베이스의 색상이 어울립니다. 깊은 오렌지, 진한 갈색 계열의 옷을 선택하여 피부와 어우러지는 효과를 내며, 자연의 따뜻한 느낌을 살릴 수 있습니다. 가을 퍼스널 컬러는 톤다운된 색조를 선호하며, 자연스럽고 포근한 느낌을 주는 색상들이 주를 이룹니다.</p>
+                            <img src="가을웜.jpg" alt="가을">`;
+                    break;
+                case 'D':
+                    resultMessage = `<p>당신은 겨울 유형입니다.</p>
+                            <p>겨울(Winter) 계절은 선명하고 차가운 피부톤을 가진 사람들에게 어울리며, 선명하고 진한 색상이 잘 어울립니다. 깊고 진한 레드, 청량한 블루 계열의 옷을 선택하여 도도하고 세련된 느낌을 연출할 수 있습니다. 겨울 퍼스널 컬러는 강렬하고 독특한 색조를 선호하며, 화려하고 시크한 느낌을 주는 색상들이 주를 이룹니다.</p>
+                            <img src="겨울쿨" alt="겨울">`;
+                    break;
+            }
+
+            document.getElementById('questions').style.display = 'none';
+            resultDiv.innerHTML = resultMessage;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
